@@ -51,3 +51,9 @@ git remote add origin <your-repo-url>
 git branch -M main
 git push -u origin main
 ```
+
+## This is a live Cowork project folder
+
+`~/projects/nwn-claude-skills` is connected to Cowork, so future sessions in this project can edit skill files, add new skills, and commit directly here. There's no GitHub connector available to Cowork, so `git push`/`git pull` against a remote still need to be run by you locally — Claude can prepare and commit changes here, but can't authenticate to your remote.
+
+To add a new skill going forward: create `skills/<new-skill-name>/SKILL.md` (+ `reference/` if needed), commit, and `install.sh` will pick it up automatically on next run (it loops over every folder under `skills/`).
