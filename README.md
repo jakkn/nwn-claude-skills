@@ -1,59 +1,39 @@
 # nwn-claude-skills
 
-Backup and cross-machine distribution for the Claude Code skills used on NWN:EE module projects.
+Claude Code skills for Neverwinter Nights: Enhanced Edition (NWN:EE) module development.
 
 ## Contents
 
-- `skills/nwn-custom-content/` — 2DA edits, hakpacks, placeables/items/creatures, neverwinter.nim CLI reference
-- `skills/nwn-nwscript-api/` — NWScript language notes + NWN Lexicon navigation
+- `skills/nwn-custom-content/` — 2DA edits, hakpacks, placeables/items/creatures, and the neverwinter.nim CLI reference
+- `skills/nwn-nwscript-api/` — NWScript language notes and NWN Lexicon navigation
 
-## Install on a machine
+## Installation
 
 ```
-git clone <your-remote-url> ~/dev/nwn-claude-skills   # or wherever you keep repos
-cd ~/dev/nwn-claude-skills
+git clone <repo-url> nwn-claude-skills
+cd nwn-claude-skills
 ./install.sh
 ```
 
-This symlinks each skill folder into `~/.claude/skills/`, so Claude Code — any editor, any project, on that machine — picks them up automatically. Use `./install.sh --copy` instead if you'd rather have independent copies per machine (e.g. planning to fork one machine's version).
+This symlinks each skill folder into `~/.claude/skills/`, so Claude Code picks them up automatically across every project and editor. Use `./install.sh --copy` instead for an independent, unlinked copy.
+
+To scope a skill to a single project instead of installing it globally, copy (don't symlink) the relevant `skills/<name>/` folder into that project's own `.claude/skills/<name>/`.
 
 ## Updating
 
-Edit the skill files in this repo (directly, or by asking Claude to), then:
+Edit or add skill files, then commit and push as usual:
 
 ```
 git add -A && git commit -m "update skills"
 git push
 ```
 
-On every other machine where you ran `install.sh` in symlink mode:
+Anywhere the repo was installed in symlink mode, a `git pull` picks up the change immediately — no need to re-run `install.sh` unless a new skill folder was added.
 
-```
-git pull
-```
+## Adding a new skill
 
-The update takes effect immediately — no need to re-run `install.sh` unless a *new* skill folder was added to the repo.
+Create `skills/<new-skill-name>/SKILL.md` (plus a `reference/` folder if needed) and commit. `install.sh` picks up every folder under `skills/` automatically, no changes to the script required.
 
-## Project-scoped instead of global
+## License
 
-To scope a skill to a single repo instead of installing it globally, copy (don't symlink) the relevant `skills/<name>/` folder into that repo's own `.claude/skills/<name>/`.
-
-## Also available in Cowork
-
-These same two skills are additionally saved directly to this Anthropic account's Cowork skill library (not file-based — no sync step needed there). This repo is specifically for Claude Code CLI sessions across machines/editors, where skills are read from the local filesystem rather than the account.
-
-## First-time setup (push this to your own remote)
-
-This repo starts with one local commit but no remote. Create an empty repo on GitHub/GitLab/etc. (don't initialize it with a README), then:
-
-```
-git remote add origin <your-repo-url>
-git branch -M main
-git push -u origin main
-```
-
-## This is a live Cowork project folder
-
-`~/projects/nwn-claude-skills` is connected to Cowork, so future sessions in this project can edit skill files, add new skills, and commit directly here. There's no GitHub connector available to Cowork, so `git push`/`git pull` against a remote still need to be run by you locally — Claude can prepare and commit changes here, but can't authenticate to your remote.
-
-To add a new skill going forward: create `skills/<new-skill-name>/SKILL.md` (+ `reference/` if needed), commit, and `install.sh` will pick it up automatically on next run (it loops over every folder under `skills/`).
+Apache 2.0 — see [LICENSE](LICENSE).
