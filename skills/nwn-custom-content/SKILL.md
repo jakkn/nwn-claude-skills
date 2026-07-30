@@ -17,6 +17,7 @@ Cached copies of the two core "how do I even start" tutorials are in `reference/
 - `reference/tutorial-index.md` — full categorized list of nwn.wiki tutorial pages (advanced, modeling, shaders, tools, etc.) with URLs
 - `reference/neverwinter-nim-cli.md` — the command-line toolchain to use for all of this
 - `reference/spells.md` — custom spells: spells.2da columns, the UserType mechanics fork, targeting/projectile/casting-economy variations, custom spellcasting classes via classes.2da, and ways to grant a spell outside the class system
+- `reference/vfx.md` — custom VFX: visualeffects.2da + progfx.2da (all 13 types), how to set color/size/attachment-node without touching a model, node-attached accessories (progfx Type 12), and building genuinely new VFX models
 
 ## Tooling preference
 
@@ -50,7 +51,7 @@ Cached copies of the two core "how do I even start" tutorials are in `reference/
 | Portraits | `portraits.2da` | — |
 | Load screens | `loadscreens.2da` | — |
 | Soundsets | `soundset.2da` | — |
-| Visual effects | `visualeffects.2da` | — |
+| Visual effects | `visualeffects.2da` + `progfx.2da` | See `reference/vfx.md` — color, node attachment, and scale/position are mostly progfx.2da params or script-time `EffectVisualEffect()` args, not model edits |
 | Music soundtracks | `ambientmusic.2da` | — |
 | Ambient background sound | `ambientsound.2da` | — |
 | Tilesets | Own `.2da` + `.SET` file | Self-contained; may need a `doortypes.2da` entry |
