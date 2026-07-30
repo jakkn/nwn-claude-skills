@@ -16,6 +16,7 @@ Cached copies of the two core "how do I even start" tutorials are in `reference/
 - `reference/hakpacks.md` — packaging content into a .hak file and attaching it to a module
 - `reference/tutorial-index.md` — full categorized list of nwn.wiki tutorial pages (advanced, modeling, shaders, tools, etc.) with URLs
 - `reference/neverwinter-nim-cli.md` — the command-line toolchain to use for all of this
+- `reference/spells.md` — custom spells: spells.2da columns, the UserType mechanics fork, targeting/projectile/casting-economy variations, custom spellcasting classes via classes.2da, and ways to grant a spell outside the class system
 
 ## Tooling preference
 
@@ -53,7 +54,8 @@ Cached copies of the two core "how do I even start" tutorials are in `reference/
 | Music soundtracks | `ambientmusic.2da` | — |
 | Ambient background sound | `ambientsound.2da` | — |
 | Tilesets | Own `.2da` + `.SET` file | Self-contained; may need a `doortypes.2da` entry |
-| Races / classes / feats / domains / spells / skills | Multiple 2DAs + heavy TLK cross-referencing | Much higher complexity — treat as its own research task and fetch the specific nwn.wiki page for that system before starting |
+| Spells | `spells.2da` | See `reference/spells.md` — covers the row itself, the UserType mechanics fork, and custom spellcasting classes |
+| Races / classes / feats / domains / skills | Multiple 2DAs + heavy TLK cross-referencing | Much higher complexity — treat as its own research task and fetch the specific nwn.wiki page for that system before starting |
 
 ## When this isn't enough
 
