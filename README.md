@@ -7,16 +7,22 @@ Claude Code skills for Neverwinter Nights: Enhanced Edition (NWN:EE) module deve
 - `skills/nwn-custom-content/` — 2DA edits, hakpacks, placeables/items/creatures, and the neverwinter.nim CLI reference
 - `skills/nwn-nwscript-api/` — NWScript language notes and NWN Lexicon navigation
 - `skills/anvil-api/` — NWN.Anvil (the C# framework for .NET-enabled servers): a generated index of the whole public API, the event catalogue, bundled services, working patterns, and native function hooking
+- `skills/nwn-toolbox-api/` — NWN.Toolbox consumed as a package from your own Anvil plugin: a generated index of its public API, the NUI window view/controller pattern, chat commands, permissions, and the container extension points
 
-## Regenerating the Anvil API index
+## Regenerating the API indexes
 
-`skills/anvil-api/reference/api-index.md` is generated from Anvil's source and records the
-version it was built from in its header. After upgrading the `NWN.Anvil` package, refresh it
-against a matching Anvil checkout and commit the result:
+`skills/anvil-api/reference/api-index.md` and `skills/nwn-toolbox-api/reference/api-index.md`
+are generated from their respective sources and record the version they were built from in
+their headers. After upgrading either package, refresh the index against a matching checkout
+and commit the result:
 
 ```
 python3 skills/anvil-api/scripts/generate_api_index.py /path/to/Anvil
+python3 skills/nwn-toolbox-api/scripts/generate_api_index.py /path/to/NWN.Toolbox
 ```
+
+The Toolbox index lists **public** types only — internal types are unreachable from a
+consuming assembly, so their absence from the index is the answer, not a gap in it.
 
 ## Installation
 
