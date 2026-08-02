@@ -67,6 +67,19 @@ For handlers created at runtime — or where you need to hand a script *name* to
 API — use `ScriptHandleFactory.CreateUniqueHandler(callback)` and pass the returned
 handle's script name.
 
+**The handler method must be an instance method, never `static`.** Anvil registers it via
+`Delegate.CreateDelegate(delegateType, serviceInstance, methodInfo)`, which always supplies
+the service instance as the delegate target — for a `static` method .NET binds that target
+to the method's *first parameter* instead, the signature no longer matches, and the binder
+throws `ArgumentException: Cannot bind to the target method because its signature is not
+compatible with that of the delegate type`.
+
+Note this happens at server start, while `ScriptHandlerAttributeDispatchService` walks the
+plugin's methods — it scans `BindingFlags.Static` as well as `Instance`, so a static handler
+isn't quietly skipped, it takes the server down. This is easy to trip over because the
+method often genuinely doesn't touch instance state, so an IDE will offer to make it
+`static`; don't accept that for anything carrying `[ScriptHandler]`.
+
 ## Chat commands via interface binding
 
 The idiomatic extension-point pattern: many implementations, one consumer.
@@ -159,6 +172,58 @@ foreach (Effect effect in creature.ActiveEffects.ToList())
 
 `Effect.Tag` is the practical way to find your own effects later — set it when you create
 them rather than matching on type.
+
+**Persistent area-of-effect auras.** `Effect.AreaOfEffect(vfxType, onEnterHandle,
+heartbeatHandle, onExitHandle)` spawns an `NwAreaOfEffect` — the `AOE_MOB_*`/`AOE_PER_*`
+persistent VFX types. Any handle left `null` becomes an empty string passed to the native
+`EffectAreaOfEffect`, and an empty script name does **not** mean "no script" — the engine
+falls back to whatever script is baked into `vfx_persistent.2da`'s `ONENTER`/`ONEXIT`/
+`HEARTBEAT` column for that VFX row.
+
+That fallback is the default, not the exception: of the 47 rows in the stock
+`vfx_persistent.2da`, 37 ship an `ONENTER`, 20 a `HEARTBEAT` and 18 an `ONEXIT`, and only 5
+have no script at all. They're real vanilla gameplay effects, not no-ops — row 18
+(`AOE_MOB_UNEARTHLY`, i.e. `PersistentVfxType.MobUnearthly`) has `ONENTER = NW_S1_AuraUnEaA`,
+a Will-save-or-die. Pick a row for its shape and radius and you inherit its scripts.
+
+So supply a handle for **every** slot, including the ones you don't want, using a no-op
+handler to positively suppress the 2DA default:
+
+```csharp
+// Held in fields, not locals: ScriptCallbackHandle is IDisposable and disposing it
+// unregisters the script name, so the handles must outlive every AoE that references them.
+private readonly ScriptCallbackHandle onEnter;
+private readonly ScriptCallbackHandle noOp;
+
+public AuraService(ScriptHandleFactory scriptHandleFactory)
+{
+  onEnter = scriptHandleFactory.CreateUniqueHandler(HandleAuraEnter);
+  noOp = scriptHandleFactory.CreateUniqueHandler(_ => ScriptHandleResult.Handled);
+}
+
+// Every slot named — leaving heartbeatHandle out here would inherit the 2DA's.
+Effect aura = Effect.AreaOfEffect(PersistentVfxType.MobUnearthly, onEnter, noOp, noOp);
+```
+
+Create the handles once per plugin, not once per AoE. Each `CreateUniqueHandler` call
+registers a fresh generated script name that stays registered until disposed, so
+per-instance handles leak registrations.
+
+If the handlers are fixed for the life of the plugin, a `[ScriptHandler]` pair with constant
+names is simpler than managing handles at all — see "Replacing an NWScript script" above.
+There's no `Effect.AreaOfEffect` overload taking plain script names, so pairing it with
+`[ScriptHandler]` means calling the native function yourself:
+
+```csharp
+Effect aura = NWScript.EffectAreaOfEffect(
+  ((PersistentVfxTableEntry)PersistentVfxType.MobUnearthly).RowIndex,
+  "aura_enter", "aura_hb", "aura_exit")!;
+```
+
+Declare the result as `Effect` rather than `var` — the conversion from the native handle is
+implicit, and `var` leaves you with the raw type. The tradeoff is that you skip the
+`AssertValid()` check `Effect.AreaOfEffect` performs on each handle, so a typo in a script
+name fails silently at runtime instead of throwing at creation.
 
 ## Item properties
 

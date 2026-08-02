@@ -228,6 +228,10 @@ Four options, in increasing order of persistence:
 - Reimplementing something Anvil already ships — skim `reference/services.md` before
   writing a hook or a bespoke system.
 - Script handler names must be ≤ 16 characters, same limit as the toolset.
+- Marking a `[ScriptHandler]` method `static` — it compiles, then throws at server start.
+  Your IDE will suggest it; see `reference/patterns.md`.
+- Letting a persistent AoE effect inherit its scripts from `vfx_persistent.2da` by leaving
+  a handler slot null — see `reference/patterns.md`.
 
 ## Related skills
 
