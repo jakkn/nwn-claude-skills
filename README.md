@@ -6,6 +6,17 @@ Claude Code skills for Neverwinter Nights: Enhanced Edition (NWN:EE) module deve
 
 - `skills/nwn-custom-content/` — 2DA edits, hakpacks, placeables/items/creatures, and the neverwinter.nim CLI reference
 - `skills/nwn-nwscript-api/` — NWScript language notes and NWN Lexicon navigation
+- `skills/anvil-api/` — NWN.Anvil (the C# framework for .NET-enabled servers): a generated index of the whole public API, the event catalogue, bundled services, working patterns, and native function hooking
+
+## Regenerating the Anvil API index
+
+`skills/anvil-api/reference/api-index.md` is generated from Anvil's source and records the
+version it was built from in its header. After upgrading the `NWN.Anvil` package, refresh it
+against a matching Anvil checkout and commit the result:
+
+```
+python3 skills/anvil-api/scripts/generate_api_index.py /path/to/Anvil
+```
 
 ## Installation
 

@@ -62,6 +62,7 @@ Compiling is how you catch syntax/type errors before considering a script done. 
 
 - `reference/function-categories.md` — the full list of NWN Lexicon's function category pages, for browsing by topic instead of guessing exact names.
 
-## Related skill
+## Related skills
 
 - `nwn-custom-content` covers the broader neverwinter.nim CLI toolchain (`reference/neverwinter-nim-cli.md`) for everything besides script compilation — 2DA edits, hakpacks, resource extraction.
+- `anvil-api` covers NWN.Anvil, the C# framework that replaces NWScript on .NET-enabled servers. If the project is a C# plugin (`Anvil.API` / `Anvil.Services` in the usings, `.cs` rather than `.nss`), use that skill instead of this one. The two meet at Anvil's `[ScriptHandler("name")]` attribute, which lets a C# method stand in for a named NWScript.

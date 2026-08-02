@@ -58,6 +58,11 @@ Cached copies of the two core "how do I even start" tutorials are in `reference/
 | Spells | `spells.2da` | See `reference/spells.md` — covers the row itself, the UserType mechanics fork, and custom spellcasting classes |
 | Races / classes / feats / domains / skills | Multiple 2DAs + heavy TLK cross-referencing | Much higher complexity — treat as its own research task and fetch the specific nwn.wiki page for that system before starting |
 
+## Related skills
+
+- `nwn-nwscript-api` — writing the `.nss` scripts that drive the content added here.
+- `anvil-api` — NWN.Anvil, the C# framework used on .NET-enabled servers. Anvil reads 2DAs at runtime via `NwGameTables` and can write resources at runtime via its `ResourceManager`, so a custom 2DA authored with this skill is often consumed from C# rather than NWScript.
+
 ## When this isn't enough
 
 If the task involves a content type not covered in the cached reference files (e.g. custom races, item properties, poisons, weather types), fetch the matching page from the tutorial index (`reference/tutorial-index.md` has the categorized link list) before improvising — 2DA column semantics are easy to get subtly wrong and the failure mode is often a silent crash or content that doesn't load rather than a clear error.
