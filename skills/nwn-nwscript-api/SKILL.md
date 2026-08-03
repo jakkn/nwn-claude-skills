@@ -7,9 +7,17 @@ description: Use when writing, reviewing, or debugging NWScript (.nss) code for 
 
 The authoritative, always-current function/event/constant reference is **NWN Lexicon** (https://nwnlexicon.com). This skill exists so an agent doesn't have to rediscover the lookup pattern every time and doesn't hallucinate function signatures.
 
+**This skill is a navigation aid, not an authority** (last reviewed 2026-08). The Lexicon and `nwscript.nss` are ground truth; where they disagree with anything here, they win.
+
 ## The one rule that matters most
 
 **Never write a function call from memory alone if you're not certain of its exact name, parameter order, or default values.** NWScript has hundreds of engine functions, many with similar names (e.g. `GetFirstObjectInArea` vs `GetNearestObject` vs `GetObjectByTag`) and inconsistent parameter ordering between "similar" functions. A wrong signature usually won't produce a compile error you'd expect — it can compile with silently wrong defaults, or fail at runtime with no useful message. Before using an unfamiliar function, fetch its NWN Lexicon page.
+
+### The same rule applies to tool names
+
+**Never name, recommend, or plan around an NWN tool recalled from memory.** Identify it from a page fetched in this session — the project's own build config, https://github.com/niv/neverwinter.nim, or the relevant nwn.wiki page.
+
+Same failure mode, different surface. NWN tooling carries twenty-plus years of forum history, so the tool a model recalls most readily is reliably *the oldest* one rather than the current one, and several long-established NWN tools are only partially updated for EE — they run, accept the input, and silently drop EE-specific data. Fluent recall of a tool name is a warning sign, not a confidence signal. If the needed tool can't be identified from a fetched source, or isn't available in this environment, say so and hand the gap back to the user rather than substituting something familiar.
 
 ## Looking up functions/events/constants
 

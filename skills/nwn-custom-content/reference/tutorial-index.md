@@ -2,6 +2,21 @@
 
 Source: https://nwn.wiki/spaces/NWN1/pages/14618048/Tutorials — fetch the specific page below rather than guessing at content; this file is just a map.
 
+Last reviewed: 2026-08. Link sets and tool recommendations on the wiki change; re-fetch rather than trusting this map to be current.
+
+## Tool and format reference — resolve tooling from here, not from memory
+
+Per the tool-resolution rule in `SKILL.md`: any tool outside the neverwinter.nim CLI set must be identified from a page fetched in-session. These are the pages that carry current recommendations. **The most frequently-mentioned NWN tool for a given job is often a pre-EE one with incomplete EE support** — check the page, don't rely on familiarity.
+
+- Models (formats, and current compile/decompile tooling) — https://nwn.wiki/display/NWN1/Models
+- MDL ASCII (the text model format; note the engine loads ASCII directly) — https://nwn.wiki/spaces/NWN1/pages/12027273/MDL+ASCII
+- MDL (binary format overview) — https://nwn.wiki/display/NWN1/MDL
+- Model Table of Parameters — https://nwn.wiki/pages/viewpage.action?pageId=53671240
+- 2DA file reference — https://nwn.wiki/spaces/NWN1/pages/38174875/2da+Files
+- HAK format — https://nwn.wiki/display/NWN1/HAK
+- Tool Tutorials section — see the bottom of this file
+- neverwinter.nim CLI (the default toolchain) — https://github.com/niv/neverwinter.nim, commands documented in `neverwinter-nim-cli.md`
+
 ## Introductory Tutorials
 - Introduction to Adding Custom Content to a Module — https://nwn.wiki/spaces/NWN1/pages/53670537/Introduction+to+Adding+Custom+Content+to+a+Module (cached in `adding-custom-content.md`)
 - Introduction to Hakpacks — https://nwn.wiki/spaces/NWN1/pages/60981970/Introduction+to+Hakpacks (cached in `hakpacks.md`)

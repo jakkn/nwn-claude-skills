@@ -7,21 +7,43 @@ description: Use when adding custom content to a Neverwinter Nights: Enhanced Ed
 
 This skill packages the workflow for adding non-script custom content to an NWN:EE module: 2DA edits, hakpacks, new appearances/items/placeables, and where to find the authoritative tutorials on nwn.wiki.
 
-Primary sources (fetch live when the cached notes below aren't enough):
+**This skill is a navigation aid, not an authority.** nwn.wiki is canonical. The notes here are a compressed snapshot (last reviewed 2026-08) that exists to get you to the right page and to warn you off the known traps — it is *not* complete coverage of any topic it touches, and a section that reads as authoritative may still be out of date. Where this skill and the wiki disagree, the wiki wins.
+
+Primary sources:
 - Tutorial index: https://nwn.wiki/spaces/NWN1/pages/14618048/Tutorials
 - 2DA file reference: https://nwn.wiki/spaces/NWN1/pages/38174875/2da+Files (individual files like placeables.2da, baseitems.2da etc. each have their own nwn.wiki page — search nwn.wiki for the filename)
+- Models and model formats: https://nwn.wiki/display/NWN1/Models · https://nwn.wiki/spaces/NWN1/pages/12027273/MDL+ASCII
 
-Cached copies of the two core "how do I even start" tutorials are in `reference/`:
+Reference files in `reference/`. Each one opens with its own explicit "not covered here" list — **read that list before starting work in that area**, since it names the gaps you can't otherwise infer from a document that looks finished:
 - `reference/adding-custom-content.md` — 2DA edits, adding a new placeable end to end
 - `reference/hakpacks.md` — packaging content into a .hak file and attaching it to a module
 - `reference/tutorial-index.md` — full categorized list of nwn.wiki tutorial pages (advanced, modeling, shaders, tools, etc.) with URLs
 - `reference/neverwinter-nim-cli.md` — the command-line toolchain to use for all of this
 - `reference/spells.md` — custom spells: spells.2da columns, the UserType mechanics fork, targeting/projectile/casting-economy variations, custom spellcasting classes via classes.2da, and ways to grant a spell outside the class system
-- `reference/vfx.md` — custom VFX: visualeffects.2da + progfx.2da (all 13 types), how to set color/size/attachment-node without touching a model, node-attached accessories (progfx Type 12), and building genuinely new VFX models
+- `reference/vfx.md` — custom VFX: visualeffects.2da + progfx.2da (all 13 types), what progfx can and cannot recolor, recoloring an existing particle VFX via ASCII model edits, node-attached accessories (progfx Type 12), and the blend/alpha trap. Uses **[wiki]** / **[tested]** / **[unverified]** markers to separate documented behaviour from hands-on findings.
 
-## Tooling preference
+## Tooling
 
-**Prefer the neverwinter.nim CLI tools (https://github.com/niv/neverwinter.nim) over GUI/Windows-only tools whenever a task can be done from the command line.** `nwn_erf`, `nwn_twoda`, `nwn_resman_extract`, etc. are cross-platform, scriptable, and don't require WINE or a GUI session — a much better fit for an agent than driving `nwnexplorer.exe` or `nwhak.exe`. Full command reference in `reference/neverwinter-nim-cli.md`. Fall back to the GUI tools (nwnexplorer, nwhak.exe via the toolset/WINE) only if the CLI genuinely can't do something (e.g. visual model preview) or the user asks for the GUI workflow specifically.
+**Default toolchain: the neverwinter.nim CLI (https://github.com/niv/neverwinter.nim).** `nwn_erf`, `nwn_twoda`, `nwn_resman_extract` and friends are cross-platform, scriptable, and need no GUI session. Full command reference in `reference/neverwinter-nim-cli.md`. Everything in the core workflow below is doable with it.
+
+### Tool-resolution rule (read this before naming any other tool)
+
+**Never recommend, invoke, or plan around a tool you recalled from memory. Every tool named outside the neverwinter.nim set must come from a page fetched during this session.**
+
+This is not a style preference — it is the same anti-hallucination rule the `nwn-nwscript-api` skill applies to function signatures, extended to tooling, and for the same reason. NWN tooling has twenty-plus years of accumulated forum history, so the tool a model recalls most readily is reliably *the oldest one*, not the current one. Several long-established NWN tools are now only partially updated for EE and will silently drop EE-specific data. A confident recollection here is a strong signal you are about to name something obsolete.
+
+When the default toolchain can't do something:
+
+1. Fetch the relevant nwn.wiki page for that task class (see the tool-and-format index in `reference/tutorial-index.md`) and use whatever it currently recommends.
+2. Prefer a CLI-capable option. An agent cannot run a GUI, and cannot run the game client.
+3. If nothing usable is available in this environment, **stop and tell the user what's needed** — hand back the part you can do and name the missing capability. Do not improvise an installation, a platform workaround, or a substitute check.
+
+Do not document environment setup, install locations, or filesystem paths in this skill. It is read by people on different operating systems with different install layouts; a recipe that works on one machine is a trap on the others.
+
+### Known capability gaps in the default toolchain
+
+- **No model compiler or decompiler.** Stock `.mdl` files ship compiled. Getting to editable ASCII needs an external decompiler resolved per the rule above. Note the engine loads ASCII `.mdl` directly, so *producing* content never requires a compiler — see `reference/vfx.md`.
+- **No running game client.** Anything gated on launching NWN — in-game console commands, model hot-reload, visual confirmation — is a user handoff, not an agent step.
 
 ## Core workflow
 
@@ -63,6 +85,18 @@ Cached copies of the two core "how do I even start" tutorials are in `reference/
 - `nwn-nwscript-api` — writing the `.nss` scripts that drive the content added here.
 - `anvil-api` — NWN.Anvil, the C# framework used on .NET-enabled servers. Anvil reads 2DAs at runtime via `NwGameTables` and can write resources at runtime via its `ResourceManager`, so a custom 2DA authored with this skill is often consumed from C# rather than NWScript.
 
-## When this isn't enough
+## Fetch before acting — named triggers
 
-If the task involves a content type not covered in the cached reference files (e.g. custom races, item properties, poisons, weather types), fetch the matching page from the tutorial index (`reference/tutorial-index.md` has the categorized link list) before improvising — 2DA column semantics are easy to get subtly wrong and the failure mode is often a silent crash or content that doesn't load rather than a clear error.
+"When this isn't enough" is not a judgement you can make from the inside; a compressed summary looks complete precisely where it's thinnest. So these are stated as triggers rather than left to discretion. **Fetch the relevant page before writing anything if the task involves:**
+
+- **A content type with no reference file above** — custom races, classes, feats, domains, item properties, poisons, weather, tilesets. Start from `reference/tutorial-index.md` and fetch the specific page.
+- **Any 2DA column not documented above.** Column semantics are easy to get subtly wrong and the failure mode is a silent crash or content that won't load, not an error message. Fetch that 2DA's own wiki page.
+- **Any tool outside the neverwinter.nim set** — see the tool-resolution rule.
+- **Binary model manipulation**, or any `.mdl` work beyond editing existing ASCII.
+- **Anything you'd be relying on recall for.** If you can't point at where a claim came from, treat it as unverified.
+
+## Reporting honestly
+
+Most failure modes in NWN custom content are silent — content that doesn't load, a VFX that renders nothing, a spell that skips a mechanic. Almost none of it can be verified without launching the game, which an agent cannot do.
+
+Do not manufacture a substitute for verification, and do not describe unverified work as working. Say what was changed, name the specific things most likely to be wrong, and hand over test steps for the user to run. If a task needed a capability that wasn't available, report that rather than routing around it — a plainly-flagged gap is far cheaper for the user than a confident wrong answer.

@@ -24,13 +24,13 @@ Models, textures, 2DA files, sounds, music, tileset files.
 
 ## Creating a hak
 
-**Preferred: `nwn_erf` from neverwinter.nim** (https://github.com/niv/neverwinter.nim — cross-platform, scriptable, no GUI/WINE needed; see `neverwinter-nim-cli.md` for full syntax):
+**Use `nwn_erf` from neverwinter.nim** (https://github.com/niv/neverwinter.nim — cross-platform and scriptable; see `neverwinter-nim-cli.md` for full syntax):
 
 1. Gather the files to add outside the game's own folders in one directory. **All filenames lowercase** — mixed case risks accidentally adding two "different" files that are really the same resource.
 2. Build the hak: `nwn_erf -c -f statue_torm.hak <directory-or-file-list>`. `.hak` is auto-detected as the ERF type from the filename extension.
-3. Hakpacks are stored uncompressed; zip (7-Zip, or plain `zip`/`gzip` on Linux) before distributing.
+3. Hakpacks are stored uncompressed; compress them before distributing.
 
-**GUI alternative:** `nwhak.exe` from `<install>/Neverwinter Nights/bin/win32` (runs under WINE on non-Windows) does the same thing via drag-and-drop / Resource → Add, and must be saved with a filename ≤16 characters (excluding extension). Close it after saving — it locks the file open while running. Use this only if a GUI is specifically wanted; `nwn_erf` is otherwise the better default for agent-driven or CI workflows.
+Keep the hak filename ≤16 characters excluding the extension — a constraint of the format, not of any particular tool. GUI hak editors exist, but they work by in-place drag-and-drop, which overwrites name clashes irrevocably and can't be scripted; the CLI create/extract round-trip below is both safer and repeatable, so there's no reason for an agent to reach for one.
 
 ## Attaching a hak to a module
 
@@ -57,13 +57,11 @@ This is why large all-in-one packs like CEP are usually a one-way door — plan 
 
 ## Editing an existing hak later
 
-- **Preferred (CLI):** unpack with `nwn_erf -x -f old.hak` into a scratch directory, edit/add files there, then rebuild cleanly with `nwn_erf -c -f new.hak <directory>`. Since this always rebuilds from a full unpack, there's no risk of a silent partial overwrite — it's inherently safer than editing in place, and scriptable/repeatable in CI.
-- **Riskier (GUI):** open the existing hak in `nwhak.exe` and drag new files on top — any name clash is overwritten irrevocably.
+Unpack with `nwn_erf -x -f old.hak` into a scratch directory, edit/add files there, then rebuild cleanly with `nwn_erf -c -f new.hak <directory>`. Because this always rebuilds from a full unpack, there's no risk of a silent partial overwrite — inherently safer than any in-place edit, and scriptable/repeatable in CI.
 
 ## Merging hakpacks
 
-- **Preferred (CLI):** `nwn_erf -x -f a.hak` and `nwn_erf -x -f b.hak` into the same (or then-combined) directory, resolve any filename clashes by hand, then `nwn_erf -c -f merged.hak <directory>`.
-- **Riskier (GUI):** `nwhak.exe` File → Merge — clashing files are overwritten irrevocably.
+- `nwn_erf -x -f a.hak` and `nwn_erf -x -f b.hak` into the same (or then-combined) directory, resolve any filename clashes by hand, then `nwn_erf -c -f merged.hak <directory>`. Resolving clashes explicitly is the point — merge features in GUI hak editors silently overwrite them.
 - 2DA files almost always need manual merging line-by-line when combining haks that both touch the same 2DA — round-trip through `nwn_twoda` to CSV if that makes the diff/merge easier to do by hand or with a script.
 
 Always back up module + haks externally (cloud storage at minimum; source control / Nasher for anything beyond a small project) before hak surgery.

@@ -2,7 +2,7 @@
 
 Source: https://github.com/niv/neverwinter.nim (MIT licensed, binary releases on the GitHub Releases page — no separate runtime install needed).
 
-**Default to these tools over GUI/Windows-only equivalents** (`nwnexplorer.exe`, `nwhak.exe`) whenever the task can be scripted — they're cross-platform (no WINE), work over stdin/stdout, and are far easier for an agent to drive reliably and repeatably (e.g. rebuild-from-scratch instead of drag-and-drop edits).
+**This is the default toolchain for this skill.** The tools are cross-platform, work over stdin/stdout, and are far easier for an agent to drive reliably and repeatably than any GUI equivalent (rebuild-from-scratch instead of drag-and-drop edits). Anything not covered here needs a tool identified per the tool-resolution rule in `SKILL.md` — resolved from a fetched page, never from recall. Known gaps: no model compiler/decompiler, and nothing that substitutes for a running game client.
 
 All tools support `--help` for full usage and `--verbose`/`--quiet` for logging. **Confirm exact flags with `--help` before running an unfamiliar command** — don't guess flag names, especially the resman-selection flags (which key/hak/module files a tool reads from), since these can change between releases.
 
@@ -40,7 +40,7 @@ nwn_erf -c -f out.hak <file-or-directory>...   # create/pack — auto-detects ER
 nwn_erf -x -f in.hak [<file>...]               # extract all, or only the named files, into the current directory
 nwn_erf -t -f in.hak                           # list contents
 ```
-Add `-v` to echo filenames as they're processed. `-r N` controls how many directory levels are recursed into when packing from a directory (default 1 — bump this if your source folder has subdirectories). Because `-x` then `-c` fully rebuilds a hak from a clean directory, this create/extract round-trip is the safe way to edit or merge haks — no in-place overwrite risk the way dragging files onto `nwhak.exe` has.
+Add `-v` to echo filenames as they're processed. `-r N` controls how many directory levels are recursed into when packing from a directory (default 1 — bump this if your source folder has subdirectories). Because `-x` then `-c` fully rebuilds a hak from a clean directory, this create/extract round-trip is the safe way to edit or merge haks — no in-place overwrite risk, and name clashes surface as visible files rather than being silently replaced.
 
 ## Script compiler
 

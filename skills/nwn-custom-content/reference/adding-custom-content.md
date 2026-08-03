@@ -20,9 +20,9 @@ Curate what you add — keep haks lean. Large all-in-one content packs (e.g. CEP
 
 ## Worked example: adding a new placeable (a statue)
 
-1. **Get a clean base 2DA.** Use `nwn_resman_extract` from neverwinter.nim (https://github.com/niv/neverwinter.nim — see `neverwinter-nim-cli.md`) to pull the current `placeables.2da` straight out of the game's resource data — don't hand-write from scratch, and this also lets you find/edit existing models later. (The Windows-only `nwnexplorer` GUI does the same thing if you specifically need to browse visually, but the CLI is preferred for anything scriptable.)
+1. **Get a clean base 2DA.** Use `nwn_resman_extract` from neverwinter.nim (https://github.com/niv/neverwinter.nim — see `neverwinter-nim-cli.md`) to pull the current `placeables.2da` straight out of the game's resource data — don't hand-write from scratch, and this also lets you find/edit existing models later.
 2. **Get the model files.** For a placeable: `<name>.tga` (texture), `<name>100.mdl` (model), `<name>100.pwk` (walkmesh).
-3. **Edit the 2DA.** Either edit the plain-text `.2da` directly (use an editor that preserves line endings — Notepad++ is fine on Windows), or convert to CSV with `nwn_twoda -i placeables.2da -o placeables.csv` for easier bulk/scripted edits, then convert back with `nwn_twoda -i placeables.csv -o placeables.2da`. Add a new row on an ID well past the reserved/base-game range (example used line `1000`). Relevant columns for a placeable:
+3. **Edit the 2DA.** Either edit the plain-text `.2da` directly (whatever you use must preserve the existing line endings), or convert to CSV with `nwn_twoda -i placeables.2da -o placeables.csv` for easier bulk/scripted edits, then convert back with `nwn_twoda -i placeables.csv -o placeables.2da`. Add a new row on an ID well past the reserved/base-game range (example used line `1000`). Relevant columns for a placeable:
    - `ID` — leftmost numbered column
    - `Label` — toolset display name (convention: prefix with something like `CC:` to mark it as custom content)
    - `ModelName` — the `.mdl` filename without extension
